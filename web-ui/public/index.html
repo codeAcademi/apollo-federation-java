@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apollo Federation Demo - AI-Powered API Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🚀 Apollo Federation Demo</h1>
+            <p class="subtitle">AI-Powered API Gateway with Spring Boot Microservices</p>
+        </header>
+
+        <!-- Architecture Diagram -->
+        <section class="architecture">
+            <h2>🏗️ Architecture</h2>
+            <div class="flow-diagram">
+                <div class="flow-item">
+                    <div class="icon">👤</div>
+                    <div>User Prompt</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="flow-item">
+                    <div class="icon">🤖</div>
+                    <div>Anthropic Claude</div>
+                    <div style="font-size: 11px; color: #94A3B8; margin-top: 4px;">Sonnet 4.5</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="flow-item">
+                    <div class="icon">🔧</div>
+                    <div>Apollo MCP Server</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="flow-item gateway">
+                    <div class="icon">🚀</div>
+                    <div>Apollo Gateway</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="flow-item">
+                    <div class="icon">📦</div>
+                    <div>Microservices</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Status -->
+        <section class="services">
+            <h2>⚙️ System Components</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <h3>📦 Products Service</h3>
+                    <p>Port: 8081</p>
+                    <p class="tech-stack">Spring Boot + Netflix DGS</p>
+                    <span class="status" id="products-status">Checking...</span>
+                </div>
+                <div class="service-card">
+                    <h3>🛒 Orders Service</h3>
+                    <p>Port: 8082</p>
+                    <p class="tech-stack">Spring Boot + Netflix DGS</p>
+                    <span class="status" id="orders-status">Checking...</span>
+                </div>
+                <div class="service-card">
+                    <h3>👤 Customers Service</h3>
+                    <p>Port: 8083</p>
+                    <p class="tech-stack">Spring Boot + Netflix DGS</p>
+                    <span class="status" id="customers-status">Checking...</span>
+                </div>
+                <div class="service-card gateway">
+                    <h3>🚀 Apollo Gateway</h3>
+                    <p>Port: 4000</p>
+                    <p class="tech-stack">Node.js + Apollo Federation</p>
+                    <span class="status" id="gateway-status">Checking...</span>
+                </div>
+                <div class="service-card">
+                    <h3>🤖 MCP Server</h3>
+                    <p>Port: 5001</p>
+                    <p class="tech-stack">Node.js + Claude Sonnet 4.5</p>
+                    <span class="status" id="mcp-status">Checking...</span>
+                </div>
+                <div class="service-card">
+                    <h3>🌐 Web UI</h3>
+                    <p>Port: 3000</p>
+                    <p class="tech-stack">HTML/CSS/JS + Express</p>
+                    <span class="status" id="webui-status">Checking...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- GraphQL Playground -->
+        <section class="playground">
+            <h2>🎮 GraphQL Playground</h2>
+            
+            <!-- Query Examples -->
+            <div class="query-examples">
+                <h3>Example Queries</h3>
+                <div class="example-buttons">
+                    <button class="example-btn" onclick="loadExample('products')">Get Products</button>
+                    <button class="example-btn" onclick="loadExample('customers')">Get Customers</button>
+                    <button class="example-btn" onclick="loadExample('orders')">Get Orders</button>
+                    <button class="example-btn" onclick="loadExample('customerOrders')">Customer Orders</button>
+                    <button class="example-btn" onclick="loadExample('crossService')">Cross-Service Query</button>
+                </div>
+            </div>
+
+            <!-- Query Input -->
+            <div class="query-section">
+                <label for="graphql-query">GraphQL Query:</label>
+                <textarea id="graphql-query" rows="10" placeholder="Enter your GraphQL query here..."></textarea>
+                <button class="execute-btn" onclick="executeQuery()">▶ Execute Query</button>
+            </div>
+
+            <!-- Results -->
+            <div class="results-section">
+                <label>Results:</label>
+                <pre id="query-results">Results will appear here...</pre>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>Built with ❤️ using Spring Boot, Netflix DGS, Apollo Federation, and MCP</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

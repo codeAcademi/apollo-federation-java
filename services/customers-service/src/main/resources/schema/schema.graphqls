@@ -1,0 +1,29 @@
+type Customer @key(fields: "id") {
+    id: ID!
+    name: String!
+    email: String!
+    phone: String!
+    address: Address!
+    tier: String!
+    loyaltyPoints: Int!
+}
+
+type Address {
+    street: String!
+    city: String!
+    state: String!
+    zipCode: String!
+    country: String!
+}
+
+type Query {
+    customers: [Customer!]!
+    customer(id: ID!): Customer
+    customersByTier(tier: String!): [Customer!]!
+    searchCustomers(query: String!): [Customer!]!
+}
+
+type Mutation {
+    updateLoyaltyPoints(customerId: ID!, points: Int!): Customer
+    updateCustomerProfile(customerId: ID!, name: String, email: String, phone: String): Customer
+}

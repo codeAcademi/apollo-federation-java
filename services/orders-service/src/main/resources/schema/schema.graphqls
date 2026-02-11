@@ -1,0 +1,46 @@
+type Order @key(fields: "id") {
+    id: ID!
+    customerId: ID!
+    customer: Customer
+    items: [OrderItem!]!
+    totalAmount: Float!
+    status: String!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type OrderItem {
+    productId: ID!
+    product: Product
+    quantity: Int!
+    price: Float!
+}
+
+input OrderItemInput {
+    productId: ID!
+    quantity: Int!
+    price: Float!
+}
+
+# Entity references for Federation
+type Product @key(fields: "id") @extends {
+    id: ID! @external
+    orders: [Order!]!
+}
+
+type Customer @key(fields: "id") @extends {
+    id: ID! @external
+    orders: [Order!]!
+}
+
+type Query {
+    orders: [Order!]!
+    order(id: ID!): Order
+    ordersByStatus(status: String!): [Order!]!
+    recentOrders(limit: Int): [Order!]!
+}
+
+type Mutation {
+    createOrder(customerId: ID!, items: [OrderItemInput!]!): Order
+    updateOrderStatus(orderId: ID!, status: String!): Order
+}

@@ -1,0 +1,22 @@
+{
+  "name": "apollo-gateway",
+  "version": "1.0.0",
+  "description": "Apollo Federation Gateway for microservices",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": ["apollo", "graphql", "federation", "gateway"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@apollo/gateway": "^2.5.0",
+    "@apollo/server": "^4.9.0",
+    "graphql": "^16.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
