@@ -1,214 +1,207 @@
 # 🚀 Quick Start Guide
 
-Get the complete Apollo Federation demo running in under 5 minutes!
+Get the Apollo Federation demo running in 5 minutes!
 
 ## Prerequisites
 
-Before you begin, ensure you have:
+Verify you have these installed:
 
-- ✅ **Java 17+** - `java -version`
-- ✅ **Maven 3.6+** - `mvn -version`
-- ✅ **Node.js 18+** - `node -version`
-- ✅ **npm 9+** - `npm -version`
-
-## Option 1: Automated Start (Recommended)
-
-### 1. Make scripts executable
 ```bash
-chmod +x start-all.sh stop-all.sh
+java -version    # Should show 17+
+mvn -version     # Should show 3.6+
+node -version    # Should show 18+
+npm -version     # Should show 9+
 ```
 
-### 2. Start all services
+## Installation
+
+### Option 1: Automated (Recommended)
+
 ```bash
+# Clone the repository
+git clone https://github.com/codeAcademi/apollo-federation-java.git
+cd apollo-federation-java
+
+# Build and start all services
+mvn clean install
 ./start-all.sh
-```
 
-This will:
-- ✓ Check prerequisites
-- ✓ Build all Java services
-- ✓ Install Node.js dependencies
-- ✓ Start all 6 services in the background
-- ✓ Create logs in the `logs/` directory
-
-### 3. Open the demo
-```bash
+# Open the demo
 open http://localhost:3000
 ```
 
-### 4. Stop all services
-```bash
-./stop-all.sh
-```
+### Option 2: Manual
 
-## Option 2: Manual Start
+If you prefer to start services individually for debugging:
 
-### Terminal 1: Products Service
 ```bash
+# Terminal 1: Products Service
 cd services/products-service
 mvn spring-boot:run
-```
-Wait for: "Products Service (Subgraph)" message
 
-### Terminal 2: Orders Service
-```bash
+# Terminal 2: Orders Service  
 cd services/orders-service
 mvn spring-boot:run
-```
-Wait for: "Orders Service (Subgraph)" message
 
-### Terminal 3: Customers Service
-```bash
+# Terminal 3: Customers Service
 cd services/customers-service
 mvn spring-boot:run
-```
-Wait for: "Customers Service (Subgraph)" message
 
-### Terminal 4: Apollo Gateway
-```bash
+# Terminal 4: Apollo Gateway
 cd gateway
-npm install
-npm start
-```
-Wait for: "Apollo Federation Gateway ready" message
+npm install && npm start
 
-### Terminal 5: Web UI
-```bash
-cd web-ui
-npm install
-npm start
-```
-Wait for: "Web UI Server" message
-
-### Terminal 6: MCP Server (Optional)
-```bash
+# Terminal 5: MCP Server
 cd mcp-server
-npm install
-npm start
+npm install && npm start
+
+# Terminal 6: Web UI
+cd web-ui
+npm install && npm start
 ```
 
-## 🎯 What to Do Next
+## Verify Services
 
-### 1. Explore the Web UI
-Open http://localhost:3000 to:
-- View service status
-- Execute GraphQL queries
-- See federation in action
+Check that all services are running:
 
-### 2. Try Example Queries
+```bash
+curl http://localhost:8081/actuator/health  # Products ✓
+curl http://localhost:8082/actuator/health  # Orders ✓
+curl http://localhost:8083/actuator/health  # Customers ✓
+curl http://localhost:4000/.well-known/apollo/server-health  # Gateway ✓
+curl http://localhost:5001/api/health       # MCP Server ✓
+curl http://localhost:3000                  # Web UI ✓
+```
 
-**Get all products:**
+## Access Points
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| **Web UI** | http://localhost:3000 | Main demo interface |
+| **GraphQL Playground** | http://localhost:4000 | Apollo Gateway playground |
+| **Products API** | http://localhost:8081/graphql | Products subgraph |
+| **Orders API** | http://localhost:8082/graphql | Orders subgraph |
+| **Customers API** | http://localhost:8083/graphql | Customers subgraph |
+| **MCP Server** | http://localhost:5001 | AI-powered query interface |
+
+## Try Example Queries
+
+### Via Web UI (Natural Language)
+
+Open http://localhost:3000 and try:
+
+- "Show me all products"
+- "List electronics"
+- "What orders does Alice have?"
+- "Find platinum customers"
+
+### Via GraphQL Playground
+
+Open http://localhost:4000 and try:
+
 ```graphql
+# Basic query
 query {
   products {
     id
     name
     price
-    stock
   }
 }
-```
 
-**Cross-service query (Customer with Orders):**
-```graphql
+# Federated query (spans multiple services)
 query {
-  customer(id: "1") {
-    name
-    email
-    orders {
-      id
-      totalAmount
-      status
-      items {
-        product {
-          name
-          price
-        }
-        quantity
-      }
+  orders {
+    id
+    status
+    product {      # From Products Service
+      name
+      price
+    }
+    customer {     # From Customers Service
+      name
+      tier
     }
   }
 }
 ```
 
-### 3. Test with GraphQL Playground
-Visit http://localhost:4000 for the Apollo Gateway playground
+## Stop Services
 
-### 4. Connect Claude AI (Optional)
-
-**macOS:** Edit `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-**Windows:** Edit `%APPDATA%\Claude\claude_desktop_config.json`
-
-Add:
-```json
-{
-  "mcpServers": {
-    "apollo-graphql": {
-      "command": "node",
-      "args": ["/absolute/path/to/mcp-server/index.js"]
-    }
-  }
-}
+```bash
+./stop-all.sh
 ```
 
-Restart Claude Desktop, then ask:
-- "Show me all electronics products"
-- "List Alice Johnson's orders"
-- "Create an order for customer 1"
+This will terminate all background processes and clean up PID files.
 
-## 📊 Service Ports
+## Troubleshooting
 
-| Service | Port | URL |
-|---------|------|-----|
-| Products | 8081 | http://localhost:8081/graphql |
-| Orders | 8082 | http://localhost:8082/graphql |
-| Customers | 8083 | http://localhost:8083/graphql |
-| Gateway | 4000 | http://localhost:4000 |
-| Web UI | 3000 | http://localhost:3000 |
+### Build Fails
 
-## 🐛 Troubleshooting
+**Issue**: Lombok compatibility errors
 
-### Port already in use
+**Fix**: Ensure you're using Java 17. Check with `java -version`
+
 ```bash
-# Find and kill process on port 8081 (example)
-lsof -ti:8081 | xargs kill -9
-```
-
-### Services won't start
-```bash
-# Clean build
+# macOS with multiple Java versions
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+java -version
 mvn clean install
-
-# Check Java version
-java -version  # Should be 17+
 ```
 
-### Gateway can't connect to services
-- Ensure all 3 Spring Boot services are running
-- Check logs: `tail -f logs/products-service.log`
-- Verify ports: `lsof -i :8081,8082,8083`
+### Gateway Won't Start
 
-### Node modules issues
+**Issue**: `ECONNREFUSED` errors
+
+**Fix**: Start Spring Boot services first, wait 10-15 seconds, then start Gateway
+
 ```bash
-# Clean install
-rm -rf node_modules package-lock.json
-npm install
+# Start services individually and wait
+cd services/products-service && mvn spring-boot:run &
+sleep 5
+cd services/orders-service && mvn spring-boot:run &
+sleep 5
+cd services/customers-service && mvn spring-boot:run &
+sleep 10
+
+# Now start gateway
+cd gateway && npm start
 ```
 
-## 📚 Next Steps
+### Services Already Running
 
-1. Read [README.md](README.md) for architecture details
-2. Check [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) for technical details
-3. Explore service code in `services/`
-4. Customize schemas in `src/main/resources/schema/`
+**Issue**: Port already in use
 
-## 💡 Tips
+**Fix**: Stop all services first
 
-- Use the Web UI for quick testing
-- GraphQL Playground has built-in documentation
-- Check logs in `logs/` directory when debugging
-- Each service has its own README in its directory
+```bash
+./stop-all.sh
+# Kill any remaining processes
+lsof -ti:8081,8082,8083,4000,5001,3000 | xargs kill -9
+# Start fresh
+./start-all.sh
+```
+
+## Next Steps
+
+- Check out the [main README](README.md) for architecture details
+- Review [MCP Server setup](mcp-server/README.md) for AI configuration
+- Explore [Gateway configuration](gateway/README.md) for customization
+- See [Web UI docs](web-ui/README.md) for frontend details
+
+## AI Configuration (Optional)
+
+To enable Claude AI-powered query understanding:
+
+1. Get an API key: https://console.anthropic.com/settings/keys
+2. Create `mcp-server/.env`:
+   ```bash
+   ANTHROPIC_API_KEY=sk-ant-api03-...
+   ```
+3. Restart: `./stop-all.sh && ./start-all.sh`
+
+Without an API key, the system uses keyword-based fallback mode.
 
 ---
 
-**Need help?** Check the logs or review the service-specific README files!
+**Need help?** Check the troubleshooting section or review service logs in the `logs/` directory.
